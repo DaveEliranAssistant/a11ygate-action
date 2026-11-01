@@ -1,0 +1,75 @@
+name: A11yGate axe-core Regression Gate
+description: Fail the job on new axe-core violations and publish an accessibility regression summary.
+author: DaveEliranAssistant
+branding:
+  icon: check-square
+  color: gray-dark
+
+inputs:
+  current:
+    description: Paths to current axe-core JSON files, one path per line.
+    required: true
+  baseline:
+    description: Paths to baseline axe-core JSON files, one path per line. Omit to treat every current finding as new.
+    required: false
+    default: ''
+  threshold:
+    description: Impact threshold. minor, moderate, serious, or critical.
+    required: false
+    default: serious
+  markdown:
+    description: File path for the Markdown summary. A temporary file is used when this is empty.
+    required: false
+    default: ''
+  json:
+    description: File path for the JSON result. A temporary file is used when this is empty.
+    required: false
+    default: ''
+  update-baseline:
+    description: When set, write the current results to this baseline path.
+    required: false
+    default: ''
+  comment:
+    description: Post or update a single pull request comment. true or false.
+    required: false
+    default: 'false'
+  token:
+    description: Token used to post the pull request comment. Defaults to the job token.
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  verdict:
+    description: PASS or FAIL.
+    value: ${{ steps.gate.outputs.verdict }}
+  new:
+    description: Count of new findings.
+    value: ${{ steps.gate.outputs.new }}
+  fixed:
+    description: Count of fixed findings.
+    value: ${{ steps.gate.outputs.fixed }}
+  still-open:
+    description: Count of still-open findings.
+    value: ${{ steps.gate.outputs.still-open }}
+  exit-code:
+    description: CLI exit code. 0 pass, 1 new violations, 2 unreadable input.
+    value: ${{ steps.gate.outputs.exit-code }}
+
+runs:
+  using: composite
+  steps:
+    - id: gate
+      shell: bash
+      env:
+        A11Y_CURRENT: ${{ inputs.current }}
+        A11Y_BASELINE: ${{ inputs.baseline }}
+        A11Y_THRESHOLD: ${{ inputs.threshold }}
+        A11Y_MARKDOWN: ${{ inputs.markdown }}
+        A11Y_JSON: ${{ inputs.json }}
+        A11Y_UPDATE_BASELINE: ${{ inputs.update-baseline }}
+        A11Y_COMMENT: ${{ inputs.comment }}
+        A11Y_TOKEN: ${{ inputs.token }}
+        A11Y_PR_NUMBER: ${{ github.event.pull_request.number }}
+        A11Y_REPOSITORY: ${{ github.repository }}
+        A11Y_API_URL: ${{ github.api_url }}
+      run: node "${{ github.action_path }}/run.mjs"
