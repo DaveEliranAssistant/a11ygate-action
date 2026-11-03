@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "security_concerns": [],
+  "logic_errors": [],
+  "suggestions": [
+    "Strengthen the consumer baseline-proposal assertions to compare acceptedFindings and newlyAccepted by exact fingerprint, ruleId, and selector against independently specified expectations. The current checks establish counts and review-required status, but do not independently prove which findings were accepted.",
+    "Extend the independent consumer oracle to verify shared coverage/debt metrics and retained evidence, and add a combined known-FAIL plus incomplete-coverage case. The adapter preserves FAIL dominance in the reviewed implementation, but the new consumer cases do not directly exercise that combination."
+  ],
+  "summary": "Read the entire supplied diff in three paginated reads through its final line; reviewed no other files and performed no writes, execution, or API calls. Both prior findings are addressed: dangling sidecar symlinks are rejected before output mutation, and scanError without failed status is rejected, with comparison logic also treating scanError as failed coverage. The Action checks event-derived repository and PR identity before commenting, skips fork events, restricts comment updates to the GitHub Actions bot, rejects input/output aliases, and removes stale native reports before analysis. Native INCOMPLETE maps to shared error without discarding coverage/debt evidence, while known FAIL remains fail. Regression-only PASS can retain existing debt and explicit unassessed manual scope; manual assertions do not clear automated failures. Synthetic consumer cases are explicitly hypothetical, source-build metadata is explicitly unreleased, and no certification, legal-compliance, registry-provenance, or measured customer-outcome claims are introduced. No concrete security or logic error identified in the supplied changes. Tests were reviewed, not executed."
+}
+
+session_id: 20261103_190558_ad27d7
