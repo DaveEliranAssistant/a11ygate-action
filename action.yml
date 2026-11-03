@@ -13,6 +13,10 @@ inputs:
     description: Paths to baseline axe-core JSON files, one path per line. Omit to treat every current finding as new.
     required: false
     default: ''
+  manual-evidence:
+    description: Optional path to manual accessibility evidence JSON.
+    required: false
+    default: ''
   threshold:
     description: Impact threshold. minor, moderate, serious, or critical.
     required: false
@@ -43,13 +47,13 @@ inputs:
     required: false
     default: 'false'
   token:
-    description: Token used to post the pull request comment. Defaults to the job token.
+    description: Job token used for same-repository pull request comments. Do not supply a PAT.
     required: false
     default: ${{ github.token }}
 
 outputs:
   verdict:
-    description: PASS or FAIL.
+    description: PASS, FAIL, or INCOMPLETE.
     value: ${{ steps.gate.outputs.verdict }}
   new:
     description: Count of new findings.
@@ -60,8 +64,26 @@ outputs:
   still-open:
     description: Count of still-open findings.
     value: ${{ steps.gate.outputs.still-open }}
+  unassessed:
+    description: Count of unassessed findings.
+    value: ${{ steps.gate.outputs.unassessed }}
+  coverage:
+    description: Native coverage status.
+    value: ${{ steps.gate.outputs.coverage }}
+  coverage-issues:
+    description: Count of coverage issues.
+    value: ${{ steps.gate.outputs.coverage-issues }}
+  unassessed-scope:
+    description: Count of unassessed scope entries.
+    value: ${{ steps.gate.outputs.unassessed-scope }}
+  manual-checks:
+    description: Count of manual checks.
+    value: ${{ steps.gate.outputs.manual-checks }}
+  comment-status:
+    description: Comment delivery status (posted, skipped, skipped-fork, or error).
+    value: ${{ steps.gate.outputs.comment-status }}
   exit-code:
-    description: CLI exit code. 0 pass, 1 new violations, 2 unreadable input.
+    description: CLI exit code. 0 pass, 1 new violations, 2 incomplete coverage or invalid input.
     value: ${{ steps.gate.outputs.exit-code }}
 
 runs:
@@ -72,6 +94,7 @@ runs:
       env:
         A11Y_CURRENT: ${{ inputs.current }}
         A11Y_BASELINE: ${{ inputs.baseline }}
+        A11Y_MANUAL_EVIDENCE: ${{ inputs.manual-evidence }}
         A11Y_THRESHOLD: ${{ inputs.threshold }}
         A11Y_MARKDOWN: ${{ inputs.markdown }}
         A11Y_JSON: ${{ inputs.json }}
