@@ -151,7 +151,7 @@ function readSummary(markdownPath, fallback) {
 
 function writeSummary(summary) {
   const file = process.env.GITHUB_STEP_SUMMARY;
-  if (!file || !summary) return;
+  if (!file || !summary || process.env.A11Y_SUMMARY === 'false') return;
   appendFileSync(file, summary.endsWith('\n') ? summary : `${summary}\n`);
 }
 

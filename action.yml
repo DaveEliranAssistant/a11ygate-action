@@ -25,6 +25,9 @@ inputs:
     description: File path for the JSON result. A temporary file is used when this is empty.
     required: false
     default: ''
+  summary:
+    description: Append native Markdown to the job summary; disable when a final consolidated reporter owns it
+    default: 'true'
   target-label:
     description: Application name for report titles; defaults to repository name or Application
     default: ''
@@ -74,6 +77,7 @@ runs:
         A11Y_JSON: ${{ inputs.json }}
         A11Y_QE_RESULT: ${{ inputs.qe-result }}
         A11Y_TARGET_LABEL: ${{ inputs.target-label }}
+        A11Y_SUMMARY: ${{ inputs.summary }}
         A11Y_UPDATE_BASELINE: ${{ inputs.update-baseline }}
         A11Y_COMMENT: ${{ inputs.comment }}
         A11Y_TOKEN: ${{ inputs.token }}

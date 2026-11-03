@@ -25,6 +25,7 @@ Web app: https://a11ygate.vercel.app · CLI: `npx @qe-atlas/a11ygate` · Source:
 | `markdown` | temp file | Where to write the Markdown summary. |
 | `json` | temp file | Where to write the JSON result. |
 | `update-baseline` | empty | Path to overwrite with the current results. |
+| `summary` | `true` | Append native job summary. Set false when a final consolidated report owns that summary. Native files are still emitted. |
 | `comment` | `false` | Post or update a single pull request comment. |
 | `token` | `github.token` | Token for that comment. |
 
