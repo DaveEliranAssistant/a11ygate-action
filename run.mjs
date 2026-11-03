@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process';
-import { appendFileSync, existsSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { buildResult } from './qe-result.mjs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -170,6 +171,10 @@ const exitCode = runCli(paths.markdown, paths.json);
 const summary = readSummary(paths.markdown, '');
 writeSummary(summary);
 writeResultOutputs(paths.json, exitCode);
+const qePath=(process.env.A11Y_QE_RESULT||'').trim()||path.join(path.dirname(paths.json),'qe-result-a11ygate.json');
+if([path.resolve(paths.json),path.resolve(paths.markdown)].includes(path.resolve(qePath)))throw new Error('Shared result must not overwrite a native output');
+let native=null;try{if(exitCode!==2)native=JSON.parse(readFileSync(paths.json,'utf8'));}catch{}
+writeFileSync(qePath,JSON.stringify(buildResult(native,summary,exitCode),null,2)+'\n');
 
 let code = exitCode;
 if (isYes(process.env.A11Y_COMMENT)) {
