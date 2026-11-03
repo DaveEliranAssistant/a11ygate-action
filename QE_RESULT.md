@@ -9,3 +9,5 @@ PASS means no new qualifying regressions, not accessibility certification.
 Operational failures may leave no shared file when input/path validation fails before output acquisition. Configure expected-files in the reporter so this is an explicit ERROR, never a silent omission.
 
 Tests: `node --test qe-result.test.mjs`. No baseline or assertion changes.
+
+Change grouping: findings carry an optional `change` field (new/fixed/still-open), rendered in that order. The A11yGate wrapper reads its real version from the official published package.json; its exact bundle hash is recorded in cli-provenance.json.

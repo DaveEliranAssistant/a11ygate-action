@@ -18,6 +18,8 @@ Web app: https://a11ygate.vercel.app · CLI: `npx @qe-atlas/a11ygate` · Source:
 | Input | Default | Purpose |
 | --- | --- | --- |
 | `current` | required | Axe JSON paths, one per line. |
+| `target-label` | repository name / Application | App name used instead of the scan host in report titles. |
+| `qe-result` | beside JSON report | Versioned shared result; version read from the bundled official package metadata. |
 | `baseline` | empty | Baseline JSON paths, one per line. |
 | `threshold` | `serious` | `minor`, `moderate`, `serious`, or `critical`. |
 | `markdown` | temp file | Where to write the Markdown summary. |
@@ -28,7 +30,7 @@ Web app: https://a11ygate.vercel.app · CLI: `npx @qe-atlas/a11ygate` · Source:
 
 The comment is marked with `<!-- a11ygate -->` and updated in place on later runs. The job summary receives the same Markdown. The step exits with the CLI code: **0** pass, **1** new violations at or above the threshold, **2** unreadable input.
 
-Commenting needs `issues: write` so the token can create an issue comment on the pull request.
+Commenting needs `pull-requests: write` so the token can create an issue comment on the pull request.
 
 ## Copy-paste workflow
 
@@ -41,7 +43,7 @@ on:
 
 permissions:
   contents: read
-  issues: write
+  pull-requests: write
 
 jobs:
   a11y:
