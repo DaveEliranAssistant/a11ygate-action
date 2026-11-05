@@ -31,7 +31,9 @@ Web app: https://a11ygate.vercel.app · CLI: `npx @qe-atlas/a11ygate` · Source:
 
 The comment is marked with `<!-- a11ygate -->` and updated in place on later runs. The job summary receives the same Markdown. The step exits with the CLI code: **0** pass, **1** new violations at or above the threshold, **2** unreadable input.
 
-Commenting needs `pull-requests: write` so the token can create an issue comment on the pull request.
+Commenting on a pull request needs `pull-requests: write` in the job that runs the action. In real same-repository dogfood, `issues: write` alone returned `403 Resource not accessible by integration` even though the accessibility verdict was PASS. The corrected scope was verified in [dogfood run 41528696320](https://github.com/DaveEliranAssistant/qe-dogfood/actions/runs/41528696320) and its [posted comment](https://github.com/DaveEliranAssistant/qe-dogfood/pull/3#issuecomment-6588950073).
+
+Keep application execution in a separate read-only job and analyze its artifact in the comment-capable job. Fork PR tokens normally cannot write comments; disable `comment` there explicitly, rather than introducing a PAT or `pull_request_target`.
 
 ## Copy-paste workflow
 
