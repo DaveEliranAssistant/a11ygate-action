@@ -1,7 +1,9 @@
 {
   "package": "@qe-atlas/a11ygate",
   "version": "0.1.0",
-  "tarball": "https://registry.npmjs.org/@qe-atlas/a11ygate/-/a11ygate-0.1.0.tgz",
-  "tarballSha1": "97c7c3062b6256d157a054dd0b87048197016f5f",
-  "bundleSha256": "f504fd78a82f9003c50ba146385d03e869fc068e95d91b4608bbece99c4b7c04"
+  "sourceBuild": true,
+  "releaseStatus": "unreleased-source-build",
+  "sourceRepository": "https://github.com/DaveEliranAssistant/a11ygate",
+  "sourceCommit": "11df7f0f49c27727d80113795d98fa97c91a5169",
+  "bundleSha256": "4d18165f747094ba979fc8a42346545c306eed8af5c7fa8a00ef5b1333269253"
 }

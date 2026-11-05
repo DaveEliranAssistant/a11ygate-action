@@ -92,3 +92,8 @@ test('cart', async ({ page }) => {
 `@axe-core/playwright` belongs in the project under test. It is not a runtime dependency of the A11yGate web app.
 
 To accept the current tree as the next baseline, run the action with `update-baseline: a11y/baseline.json` and commit the file. The gate still exits 1 when the current run has new violations, including on the run that writes the file.
+
+
+## Unreleased coverage-aware source build
+
+The current review branch builds on shared-report PR #3 and incorporates permissions guidance from #2, without merging either. [Tested installation and same-repo/fork boundaries](docs/CI_INSTALL.md). Existing v1.0.1 and npm CLI 0.1.0 do not include these additions. INCOMPLETE coverage is never PASS; baseline acceptance and structured manual evidence remain separate from verified remediation and automated findings. No legal advice or certification.
