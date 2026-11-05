@@ -1,11 +1,16 @@
 import { spawnSync } from 'node:child_process';
-import { appendFileSync, existsSync, readFileSync } from 'node:fs';
+import { appendFileSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { buildResult } from './qe-result.mjs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildCommentBody, findA11yComment } from './comment.mjs';
 
 const actionDir = path.dirname(fileURLToPath(import.meta.url));
+const targetLabel=(process.env.A11Y_TARGET_LABEL||process.env.GITHUB_REPOSITORY?.split('/').at(-1)||'Application').trim();
+if(!targetLabel||targetLabel.length>120||/[\r\n\x00-\x1f]/.test(targetLabel))throw Error('Invalid target label');
+const safeLabel=targetLabel.replace(/[\\`*_|\[\]<>]/g,'');
+
 
 function splitPaths(value) {
   return String(value ?? '')
@@ -130,7 +135,7 @@ function runCli(markdownPath, jsonPath) {
   if (update) args.push('--update-baseline', update);
 
   const child = spawnSync(process.execPath, args, { encoding: 'utf8' });
-  if (child.stdout) process.stdout.write(child.stdout);
+  if (child.stdout) process.stdout.write(child.stdout.replace(/^# A11yGate .*$/m, '# A11yGate — '+safeLabel));
   if (child.stderr) process.stderr.write(child.stderr);
   if (child.error) {
     process.stderr.write(`${child.error.message}\n`);
@@ -146,7 +151,7 @@ function readSummary(markdownPath, fallback) {
 
 function writeSummary(summary) {
   const file = process.env.GITHUB_STEP_SUMMARY;
-  if (!file || !summary) return;
+  if (!file || !summary || process.env.A11Y_SUMMARY === 'false') return;
   appendFileSync(file, summary.endsWith('\n') ? summary : `${summary}\n`);
 }
 
@@ -167,9 +172,18 @@ function writeResultOutputs(jsonPath, exitCode) {
 
 const paths = outputPaths();
 const exitCode = runCli(paths.markdown, paths.json);
+if(exitCode!==2&&existsSync(paths.json)){
+ const native=JSON.parse(readFileSync(paths.json,'utf8'));native.projectName=targetLabel;
+ writeFileSync(paths.json,JSON.stringify(native,null,2)+'\n');
+ if(existsSync(paths.markdown))writeFileSync(paths.markdown,readFileSync(paths.markdown,'utf8').replace(/^# A11yGate .*$/m,'# A11yGate — '+safeLabel));
+}
 const summary = readSummary(paths.markdown, '');
 writeSummary(summary);
 writeResultOutputs(paths.json, exitCode);
+const qePath=(process.env.A11Y_QE_RESULT||'').trim()||path.join(path.dirname(paths.json),'qe-result-a11ygate.json');
+if([path.resolve(paths.json),path.resolve(paths.markdown)].includes(path.resolve(qePath)))throw new Error('Shared result must not overwrite a native output');
+let native=null;try{if(exitCode!==2)native=JSON.parse(readFileSync(paths.json,'utf8'));}catch{}
+writeFileSync(qePath,JSON.stringify(buildResult(native,summary,exitCode),null,2)+'\n');
 
 let code = exitCode;
 if (isYes(process.env.A11Y_COMMENT)) {

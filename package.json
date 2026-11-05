@@ -1,0 +1,40 @@
+{
+  "name": "@qe-atlas/a11ygate",
+  "version": "0.1.0",
+  "description": "Fail CI on new axe-core accessibility violations and write an evidence summary.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "a11ygate": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist/cli.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DaveEliranAssistant/a11ygate.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/DaveEliranAssistant/a11ygate/issues"
+  },
+  "homepage": "https://a11ygate.vercel.app",
+  "keywords": [
+    "a11y",
+    "accessibility",
+    "axe",
+    "axe-core",
+    "ci",
+    "eu-accessibility-act",
+    "wcag",
+    "playwright"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
+}

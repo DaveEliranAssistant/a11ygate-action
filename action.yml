@@ -25,6 +25,15 @@ inputs:
     description: File path for the JSON result. A temporary file is used when this is empty.
     required: false
     default: ''
+  summary:
+    description: Append native Markdown to the job summary; disable when a final consolidated reporter owns it
+    default: 'true'
+  target-label:
+    description: Application name for report titles; defaults to repository name or Application
+    default: ''
+  qe-result:
+    description: Shared QE result file; defaults beside JSON output to qe-result-a11ygate.json
+    default: ''
   update-baseline:
     description: When set, write the current results to this baseline path.
     required: false
@@ -66,6 +75,9 @@ runs:
         A11Y_THRESHOLD: ${{ inputs.threshold }}
         A11Y_MARKDOWN: ${{ inputs.markdown }}
         A11Y_JSON: ${{ inputs.json }}
+        A11Y_QE_RESULT: ${{ inputs.qe-result }}
+        A11Y_TARGET_LABEL: ${{ inputs.target-label }}
+        A11Y_SUMMARY: ${{ inputs.summary }}
         A11Y_UPDATE_BASELINE: ${{ inputs.update-baseline }}
         A11Y_COMMENT: ${{ inputs.comment }}
         A11Y_TOKEN: ${{ inputs.token }}
